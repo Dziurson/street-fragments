@@ -1,17 +1,40 @@
-<div class="form-group">
-  <label for="exampleFormControlTextarea2">Polygon: </label>
-  <input class="form-control" id="exampleFormControlTextarea2" rows="3" [(ngModel)]="polygonString">
-  <button (click)="onPolygonClickMe()">Search!</button>
-</div>
-<br>
-<div class="form-group">
-  <label for="exampleFormControlTextarea1">Street: </label>
-  <input class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]="searchString">
-  <button (click)="onClickMe()">Search!</button>
-</div>
-<div *ngFor="let result of resultList">
-    <div *ngIf="result.class == 'boundary'" (click)="selectBoundary(result)">      
-      {{result.display_name}}
+<div class='custom-container'>
+  <div class='row custom-row'>
+    <div class='col-md-4'>
     </div>
+    <div class='col-md-4'>
+      <div class="form-group">
+        <input class="form-control" id="wkt" rows="3" [(ngModel)]="polygonString" placeholder="Wyszukaj przy użyciu WKT">
+        <div class="row">
+          <div class="col-md-6"></div>
+          <div class="col-md-6">
+            <button class="mt-1 btn btn-block btn-primary" (click)="onPolygonClickMe()">Szukaj</button>
+          </div>
+        </div>
+      </div>
+      <div class="text-center">
+        <h2>
+          Lub
+        </h2>
+      </div>
+      <div class="mt-1">
+        <div class="search-header">
+          <div class="form-group">
+            <input class="form-control" id="nominatim" rows="3" (input)="askForBoundaries()" [(ngModel)]="searchString"
+              placeholder="Wyszukaj przy użyciu Nominatim">
+          </div>
+        </div>
+        <div>
+          <div *ngFor="let result of resultList">
+            <div class="item" (click)="selectBoundary(result)">
+              {{result.display_name}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class='col-md-4'>
+    </div>
+
   </div>
-<br>
+</div>

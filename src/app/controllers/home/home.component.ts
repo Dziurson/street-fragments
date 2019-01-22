@@ -24,9 +24,9 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
   }
 
-  onClickMe() {   
+  askForBoundaries() {   
     this.client.get("https://nominatim.openstreetmap.org/search?q="+ this.searchString +"&format=json&polygon_text=1").subscribe((result: any[]) => {            
-      this.resultList = result;
+      this.resultList = result.filter(r => r.class == 'boundary');
     })
     console.log('searchString: ', this.searchString);
   }
