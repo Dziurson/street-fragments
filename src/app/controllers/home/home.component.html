@@ -3,13 +3,14 @@
     <div class='col-md-4'>
     </div>
     <div class='col-md-4'>
-      <div class="form-group">
-        <input class="form-control" id="wkt" rows="3" [(ngModel)]="polygonString" placeholder="Wyszukaj przy użyciu WKT">
-        <div class="row">
-          <div class="col-md-6"></div>
-          <div class="col-md-6">
-            <button class="mt-1 btn btn-block btn-primary" (click)="onPolygonClickMe()">Szukaj</button>
+      <div class="row">
+        <div class="col-9">
+          <div class="form-group">
+            <input class="form-control" id="wkt" rows="3" [(ngModel)]="polygonString" placeholder="Wyszukaj przy użyciu WKT">
           </div>
+        </div>
+        <div class="col-3">
+            <button class="mt-1 btn btn-block btn-primary" (click)="onPolygonClickMe()">Szukaj</button>
         </div>
       </div>
       <div class="text-center">
@@ -17,11 +18,18 @@
           Lub
         </h2>
       </div>
-      <div class="mt-1">
+      <div class="mt-4">
         <div class="search-header">
-          <div class="form-group">
-            <input class="form-control" id="nominatim" rows="3" (input)="askForBoundaries()" [(ngModel)]="searchString"
-              placeholder="Wyszukaj przy użyciu Nominatim">
+          <div class="row">
+            <div class="col-9">
+              <div class="form-group">
+                <input class="form-control" id="nominatim" rows="3" [(ngModel)]="searchString"
+                  placeholder="Wyszukaj przy użyciu Nominatim">
+              </div>
+            </div>
+            <div class="col-3">
+              <button class="btn btn-block btn-primary" (click)="askForBoundaries()">Szukaj</button>
+            </div>
           </div>
         </div>
         <div>
