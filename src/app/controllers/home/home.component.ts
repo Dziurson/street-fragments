@@ -28,15 +28,17 @@ export class HomeComponent implements OnInit {
     this.client.get("https://nominatim.openstreetmap.org/search?q="+ this.searchString +"&format=json&polygon_text=1").subscribe((result: any[]) => {            
       this.resultList = result.filter(r => r.class == 'boundary');
     })
-    console.log('searchString: ', this.searchString);
   }
 
-  onPolygonClickMe() {
-    console.log('searchString: ', this.polygonString);
+  findByBoundary() {
+    this.roadService.selectedBoundary = null;
+    this.roadService.wktBoundary = this.polygonString;
+    this.router.navigate(['/roads']);
   }
 
   selectBoundary(boundary: any) {    
     this.roadService.selectedBoundary = boundary;
+    this.roadService.wktBoundary = null;
     this.router.navigate(['/roads']);
   }
 

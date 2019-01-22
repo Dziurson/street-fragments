@@ -1,38 +1,43 @@
 <h2 class='m-2'>
+  <span *ngIf="boundary != null">
     {{boundary.display_name}}
+  </span>
+  <span *ngIf="boundary != null">
+    Ręcznie wprowadzone dane
+  </span>
 </h2>
 <div class="form-group">
-    <label for="exampleFormControlTextarea1">NodeJS Test: </label>
-    <input class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]="searchString">
-    <button (click)="fetchData()">Search!</button>
-  </div>
-  <div>    
-    <table class="table">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Nazwa</th>
-          <th scope="col">Nawierzchnia</th>
-          <th scope="col" class="text-center">Dopuszczalna prędkość</th>
-          <th scope="col" class="text-center">Jednokierunkowa</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of noderesult; index as i">
-            <th scope="row">{{i + 1}}</th>
-            <td>{{item.name}}</td>
-            <td>{{item.surface}}</td>            
-            <td class='align-middle'>
-                <span *ngIf="item.maxspeed">
-                  <img class="sign-icon" src="assets/images/B-33_{{item.maxspeed}}.png">
-                </span>
-              </td>
-            <td class='align-middle'>
-              <span *ngIf="item.oneway == 'yes'">
-                <img class="sign-icon" src="assets/images/D-3.png">
-              </span>
-            </td>
-        </tr>      
-      </tbody>
-    </table>
-  </div>
+  <label for="exampleFormControlTextarea1">NodeJS Test: </label>
+  <input class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]="searchString">
+  <button (click)="fetchData()">Search!</button>
+</div>
+<div>
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nazwa</th>
+        <th scope="col">Nawierzchnia</th>
+        <th scope="col" class="text-center">Dopuszczalna prędkość</th>
+        <th scope="col" class="text-center">Jednokierunkowa</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of noderesult; index as i">
+        <th scope="row">{{i + 1}}</th>
+        <td>{{item.name}}</td>
+        <td>{{item.surface}}</td>
+        <td class='align-middle'>
+          <span *ngIf="item.maxspeed">
+            <img class="sign-icon" src="assets/images/B-33_{{item.maxspeed}}.png">
+          </span>
+        </td>
+        <td class='align-middle'>
+          <span *ngIf="item.oneway == 'yes'">
+            <img class="sign-icon" src="assets/images/D-3.png">
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -5,7 +5,8 @@ import { Injectable } from '@angular/core';
 })
 export class RoadService {
 
-  selectedBoundary: any;
+  selectedBoundary: any = null;
+  wktBoundary: string = null;
 
   constructor() { }
 }

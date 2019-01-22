@@ -13,6 +13,7 @@ export class RoadsComponent implements OnInit {
  
   noderesult: Road[] = roadList;
   boundary: any;
+  wktBoundary: string;
 
   constructor(
     private client: HttpClient,
@@ -20,8 +21,17 @@ export class RoadsComponent implements OnInit {
 
   ngOnInit() {
     this.boundary = this.roadService.selectedBoundary;    
-    this.client.post('http://localhost:3000/get-roads', {wkt: this.boundary.geotext}).subscribe((result: string) => {
-      this.noderesult = JSON.parse(result);
+    this.wktBoundary = this.roadService.wktBoundary;
+    var data = null;
+
+    if(this.boundary)
+      data = this.boundary.geotext;
+    else
+      data = this.wktBoundary;
+
+    if(data)
+      this.client.post('http://localhost:3000/get-roads', {wkt: data}).subscribe((result: string) => {
+        this.noderesult = JSON.parse(result);
     })
   }
 
