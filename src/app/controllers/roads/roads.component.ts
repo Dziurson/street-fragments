@@ -19,7 +19,10 @@ export class RoadsComponent implements OnInit {
     private roadService: RoadService) { }
 
   ngOnInit() {
-    this.boundary = this.roadService.selectedBoundary;
+    this.boundary = this.roadService.selectedBoundary;    
+    this.client.post('http://localhost:3000/get-roads', {wkt: this.boundary.geotext}).subscribe((result: string) => {
+      this.noderesult = JSON.parse(result);
+    })
   }
 
   fetchData() {
