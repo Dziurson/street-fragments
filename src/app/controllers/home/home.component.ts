@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   }
 
   onClickMe() {   
-    this.client.get("https://nominatim.openstreetmap.org/search?q="+ this.searchString +"&format=json&polygon=1").subscribe((result: any[]) => {
+    this.client.get("https://nominatim.openstreetmap.org/search?q="+ this.searchString +"&format=json&polygon_text=1").subscribe((result: any[]) => {            
       this.resultList = result;
       console.log(this.resultList);
     })
