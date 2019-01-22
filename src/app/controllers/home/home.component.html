@@ -10,7 +10,7 @@
   <button (click)="onClickMe()">Search!</button>
 </div>
 <div *ngFor="let result of resultList">
-    <div *ngIf="result.class == 'boundary'" routerLink="/roads">      
+    <div *ngIf="result.class == 'boundary'" (click)="selectBoundary(result)">      
       {{result.display_name}}
     </div>
   </div>

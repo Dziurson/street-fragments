@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { RoadService } from 'src/app/services/road.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +14,11 @@ export class HomeComponent implements OnInit {
   polygonString: string;
   resultList: any[];
 
-  constructor(private client: HttpClient) { }
+  constructor(
+    private client: HttpClient,
+    private roadService: RoadService,
+    private router: Router
+    ) { }
 
   ngOnInit() {
   }
@@ -27,6 +33,11 @@ export class HomeComponent implements OnInit {
 
   onPolygonClickMe() {
     console.log('searchString: ', this.polygonString);
+  }
+
+  selectBoundary(boundary: any) {
+    this.roadService.selectedBoundary = boundary;
+    this.router.navigate(['/roads']);
   }
 
 }
