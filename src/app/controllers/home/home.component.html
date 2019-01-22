@@ -1,0 +1,17 @@
+<div class="form-group">
+  <label for="exampleFormControlTextarea2">Polygon: </label>
+  <input class="form-control" id="exampleFormControlTextarea2" rows="3" [(ngModel)]="polygonString">
+  <button (click)="onPolygonClickMe()">Search!</button>
+</div>
+<br>
+<div class="form-group">
+  <label for="exampleFormControlTextarea1">Street: </label>
+  <input class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]="searchString">
+  <button (click)="onClickMe()">Search!</button>
+</div>
+<div *ngFor="let result of resultList">
+    <div routerLink="/roads">
+      {{result.display_name}}
+    </div>
+  </div>
+<br>
