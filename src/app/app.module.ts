@@ -10,12 +10,14 @@ import { MatButtonModule, MatCheckboxModule } from '@angular/material';
 import { MatTableModule } from '@angular/material/table';
 import { HomeComponent } from './controllers/home/home.component';
 import { RoadsComponent } from './controllers/roads/roads.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    RoadsComponent
+    RoadsComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
