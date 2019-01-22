@@ -42,6 +42,5 @@ server.get('/test', cors(), (req, res, next) => {
 });
 
 server.listen(port, hostname, () => {
-  // connect to the DB
   console.log(`Server running at http://${hostname}:${port}/`);
 });

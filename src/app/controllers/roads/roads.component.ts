@@ -18,8 +18,7 @@ export class RoadsComponent implements OnInit {
   }
 
   fetchData() {
-    this.client.get('http://localhost:3000/test').subscribe((result: string) => {      
-      console.log(result);
+    this.client.get('http://localhost:3000/test').subscribe((result: string) => {
       this.noderesult = JSON.parse(result);
     })
   }
