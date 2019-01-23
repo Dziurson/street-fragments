@@ -26,7 +26,7 @@ server.use(bodyParser.urlencoded({
 }))
 server.use(bodyParser())
 
-const sequelize = new Sequelize('postgres://postgres:postgres@localhost:5432/osm',{
+const sequelize = new Sequelize('postgres://postgres:postgres@localhost:5432/roads',{
   logging: false
 });
 
