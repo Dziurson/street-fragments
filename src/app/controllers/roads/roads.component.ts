@@ -23,12 +23,15 @@ export class RoadsComponent implements OnInit {
   firstPage: number = 1;
   secondPage: number = 2;
   thirdPage: number = 3;
+  waiting:boolean;
 
   constructor(
     private client: HttpClient,
     private roadService: RoadService) { }
 
   ngOnInit() {
+    //Offline Work - set false
+    this.waiting = true;
     this.boundary = this.roadService.selectedBoundary;
     this.wktBoundary = this.roadService.wktBoundary;
     var data = null;
@@ -44,6 +47,8 @@ export class RoadsComponent implements OnInit {
   }
 
   fetchData() {
+    //Offline Work - set false
+    this.waiting = true;
     var data = null;
   
     if (this.boundary)
@@ -68,6 +73,7 @@ export class RoadsComponent implements OnInit {
     this.roadService.getRoads([this.searchString, this.lanes, this.surface, this.maxspeed, this.oneway, this.page], data)
     .subscribe((resp: string) => {
       this.noderesult = JSON.parse(resp);
+      this.waiting = false;
     });
   }
 

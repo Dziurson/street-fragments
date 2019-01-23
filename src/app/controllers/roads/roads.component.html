@@ -70,7 +70,7 @@
   </div>
   <button class="btn btn-primary" (click)="fetchData()">Filtruj</button>
 </div>
-<div>
+<div *ngIf="!waiting">
   <nav aria-label="...">
     <ul class="pagination justify-content-end">
       <li class="page-item" [ngClass]="{'button-hidden': page == 1}" (click)="setPage(page-1)">
@@ -157,4 +157,14 @@
       </li>
     </ul>
   </nav>
+</div>
+<div *ngIf="waiting" class="text-center loading-screen">
+  <div>
+    <h4>
+      Wczytywanie danych z bazy...
+    </h4>
+  </div>
+  <div class="align-middle">
+    <div class="loader"></div>
+  </div>
 </div>
