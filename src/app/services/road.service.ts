@@ -26,20 +26,9 @@ export class RoadService {
 
   getRoads(filters, data) {
     const [name, lanes, surface, maxspeed, oneway, page] = filters;
-    const queryParams = [];
-    if (page !== 1) { queryParams.push(['page', page]); }
-    const jsonObj = {name: name, lanes: lanes, surface: surface, maxspeed: maxspeed, oneway: oneway, wkt: data};
-    let query = '';
-    if (queryParams.length > 0) {
-      const [paramKey, paramValue] = queryParams[0];
-      query = '?' + paramKey + '=' + paramValue;
-    }
-    if (queryParams.length > 1) {
-      for (let i = 1; i < queryParams.length; i++) {
-        const [paramKey, paramValue] = queryParams[i];
-        query = query + '&' + paramKey + '=' + paramValue;
-      }
-    }
-    return this.http.post<any>(this.endpoint, JSON.stringify(jsonObj), this.httpOptions);
+    
+    const jsonObj = {name: name, lanes: lanes, surface: surface, maxspeed: maxspeed, oneway: oneway, page: page, wkt: data};
+    
+    return this.http.post<any>(this.endpoint, jsonObj, this.httpOptions);
   }
 }

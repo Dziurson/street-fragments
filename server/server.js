@@ -6,6 +6,9 @@ const cors = require('cors')
 const hostname = 'localhost';
 const port = 3000;
 const server = express();
+
+const pageSize = 20;
+
 server.use(cors());
 server.options('/get-roads', cors());
 server.use(function (req, res, next) {
@@ -42,14 +45,30 @@ sequelize.authenticate().then(() => {
     console.error('Unable to connect to the database:', err);
   });
 
-server.post('/get-roads', cors(), (req, res, next) => {
-  sequelize.query(
-    "select tags->'name' as name, " +
-    "tags->'lanes' as lanes, " +
-    "tags->'surface' as surface, " +
-    "tags->'maxspeed' as maxspeed, " +
-    "tags->'oneway' as oneway " +
-    "from ways where ST_Contains(ST_GeomFromText('" + req.body.wkt + "',4326),linestring)", { model: Road, mapToModel: true }).then(results => {
+server.post('/get-roads', cors(), (req, res, next) => { 
+
+  var query = 
+      "select tags->'name' as name, " +
+      "tags->'lanes' as lanes, " +
+      "tags->'surface' as surface, " +
+      "tags->'maxspeed' as maxspeed, " +
+      "tags->'oneway' as oneway " +
+      "from ways where ST_Contains(ST_GeomFromText('" + req.body.wkt + "',4326),linestring) "
+
+  if(req.body.name)
+    query = query + "and tags->'name' like '%" + req.body.name + "%' ";
+  if(req.body.lanes)
+    query = query + "and tags->'lanes' = '" + req.body.lanes + "' ";
+  if(req.body.surface)
+    query = query + "and tags->'surface' = '" + req.body.surface + "' ";
+  if(req.body.maxspeed)
+    query = query + "and tags->'maxspeed' = '" + req.body.maxspeed + "' ";
+  if(req.body.oneway)
+    query = query + "and tags->'oneway' = '" + req.body.oneway + "' ";
+  if(req.body.page)
+    query = query + "offset " + (req.body.page - 1) * pageSize + " limit " + pageSize
+
+  sequelize.query(query, { model: Road, mapToModel: true }).then(results => {
       res.json(JSON.stringify(results));
     })
 });

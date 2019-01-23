@@ -9,15 +9,15 @@
 <div class="form-group">
   <div class="row">
     <div class="col-sm">
-      <label for="exampleFormControlTextarea1">NodeJS Test: </label>
-      <input class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]="searchString">
+      <label for="street_name">Nazwa: </label>
+      <input class="form-control" id="street_name" rows="3" [(ngModel)]="searchString">
     </div>
   </div>
   <div class="row">
     <div class="col-sm">
         <div class="form-group">
-            <label for="exampleFormControlSelect1">Dopuszczalna prędkość</label>
-            <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]="maxspeed">
+            <label for="speed_limit">Dopuszczalna prędkość</label>
+            <select class="form-control" id="speed_limit" [(ngModel)]="maxspeed">
               <option></option>
               <option>20</option>
               <option>30</option>
@@ -35,8 +35,8 @@
     </div>
     <div class="col-sm">
         <div class="form-group">
-            <label for="exampleFormControlSelect1">Ilość pasów ruchu</label>
-            <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]="lanes">
+            <label for="lane_count">Ilość pasów ruchu</label>
+            <select class="form-control" id="lane_count" [(ngModel)]="lanes">
               <option></option>
               <option>1</option>
               <option>2</option>
@@ -46,8 +46,8 @@
     </div>
     <div class="col-sm">
         <div class="form-group">
-            <label for="exampleFormControlSelect1">Nawierzchnia</label>
-            <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]="surface">
+            <label for="surface">Nawierzchnia</label>
+            <select class="form-control" id="surface" [(ngModel)]="surface">
               <option></option>
               <option>asphalt</option>
               <option>concrete</option>
@@ -68,7 +68,7 @@
           </div>
     </div>
     </div>
-  <button (click)="fetchData()">Search!</button>
+  <button class="btn btn-primary" (click)="fetchData()">Filtruj</button>
 </div>
 <div>
   <table class="table">
@@ -77,6 +77,7 @@
         <th scope="col">#</th>
         <th scope="col">Nazwa</th>
         <th scope="col">Nawierzchnia</th>
+        <th scope="col">Ilość Pasów</th>
         <th scope="col" class="text-center">Dopuszczalna prędkość</th>
         <th scope="col" class="text-center">Jednokierunkowa</th>
       </tr>
@@ -86,17 +87,24 @@
         <th scope="row">{{i + 1}}</th>
         <td>{{item.name}}</td>
         <td>{{item.surface}}</td>
-        <td class='align-middle'>
+        <td>{{item.lanes}}</td>
+        <td class='align-middle text-center'>
           <span *ngIf="item.maxspeed">
             <img class="sign-icon" src="assets/images/B-33_{{item.maxspeed}}.png">
           </span>
+          <span *ngIf="!item.maxspeed">
+          -
+          </span>
         </td>
-        <td class='align-middle'>
+        <td class='align-middle text-center'>
           <span *ngIf="item.oneway == 'yes'">
             <img class="sign-icon" src="assets/images/D-3.png">
           </span>
+          <span *ngIf="!(item.oneway == 'yes')">
+          -
+          </span>
         </td>
       </tr>
-    </tbody>
+    </tbody>    
   </table>
 </div>

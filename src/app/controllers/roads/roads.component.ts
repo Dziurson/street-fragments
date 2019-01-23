@@ -19,6 +19,7 @@ export class RoadsComponent implements OnInit {
   surface;
   lanes;
   maxspeed;
+  page: number =  1;
 
   constructor(
     private client: HttpClient,
@@ -61,7 +62,7 @@ export class RoadsComponent implements OnInit {
     if(this.oneway === '') {
       this.oneway = null;
     }
-    this.roadService.getRoads([this.searchString, this.lanes, this.surface, this.maxspeed, this.oneway, 1], data)
+    this.roadService.getRoads([this.searchString, this.lanes, this.surface, this.maxspeed, this.oneway, this.page], data)
     .subscribe((resp: string) => {
       this.noderesult = JSON.parse(resp);
     });
