@@ -7,8 +7,67 @@
   </span>
 </h2>
 <div class="form-group">
-  <label for="exampleFormControlTextarea1">NodeJS Test: </label>
-  <input class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]="searchString">
+  <div class="row">
+    <div class="col-sm">
+      <label for="exampleFormControlTextarea1">NodeJS Test: </label>
+      <input class="form-control" id="exampleFormControlTextarea1" rows="3" [(ngModel)]="searchString">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Dopuszczalna prędkość</label>
+            <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]="maxspeed">
+              <option></option>
+              <option>20</option>
+              <option>30</option>
+              <option>40</option>
+              <option>50</option>
+              <option>60</option>
+              <option>70</option>
+              <option>80</option>
+              <option>90</option>
+              <option>100</option>
+              <option>120</option>
+              <option>140</option>
+            </select>
+          </div>
+    </div>
+    <div class="col-sm">
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Ilość pasów ruchu</label>
+            <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]="lanes">
+              <option></option>
+              <option>1</option>
+              <option>2</option>
+              <option>3 i więcej</option>
+            </select>
+          </div>
+    </div>
+    <div class="col-sm">
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Nawierzchnia</label>
+            <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]="surface">
+              <option></option>
+              <option>asphalt</option>
+              <option>concrete</option>
+              <option>paved</option>
+              <option>unpaved</option>
+              <option>compacted</option>
+            </select>
+          </div>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col-sm">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" [(ngModel)]="oneway">
+            <label class="form-check-label" for="defaultCheck1">
+              Jednokierunkowa
+            </label>
+          </div>
+    </div>
+    </div>
   <button (click)="fetchData()">Search!</button>
 </div>
 <div>

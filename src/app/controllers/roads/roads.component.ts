@@ -14,13 +14,18 @@ export class RoadsComponent implements OnInit {
   noderesult: Road[] = roadList;
   boundary: any;
   wktBoundary: string;
+  searchString: string;
+  oneway;
+  surface;
+  lanes;
+  maxspeed;
 
   constructor(
     private client: HttpClient,
     private roadService: RoadService) { }
 
   ngOnInit() {
-    this.boundary = this.roadService.selectedBoundary;    
+    this.boundary = this.roadService.selectedBoundary;
     this.wktBoundary = this.roadService.wktBoundary;
     var data = null;
 
@@ -36,6 +41,11 @@ export class RoadsComponent implements OnInit {
   }
 
   fetchData() {
+    console.log(this.searchString);
+    console.log(this.surface);
+    console.log(this.lanes);
+    console.log(this.oneway);
+    console.log(this.maxspeed);
     this.client.get('http://localhost:3000/test').subscribe((result: string) => {
       this.noderesult = JSON.parse(result);
     })
