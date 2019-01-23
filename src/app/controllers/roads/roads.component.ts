@@ -20,6 +20,9 @@ export class RoadsComponent implements OnInit {
   lanes;
   maxspeed;
   page: number =  1;
+  firstPage: number = 1;
+  secondPage: number = 2;
+  thirdPage: number = 3;
 
   constructor(
     private client: HttpClient,
@@ -66,6 +69,16 @@ export class RoadsComponent implements OnInit {
     .subscribe((resp: string) => {
       this.noderesult = JSON.parse(resp);
     });
+  }
+
+  setPage(page: number) {
+    this.page = page;
+    this.fetchData();
+    if(this.page == 1)
+      return;
+    this.firstPage = this.page - 1;
+    this.secondPage = this.page;
+    this.thirdPage = this.page + 1;
   }
 }
 

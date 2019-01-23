@@ -52,11 +52,11 @@ server.post('/get-roads', cors(), (req, res, next) => {
       "tags->'lanes' as lanes, " +
       "tags->'surface' as surface, " +
       "tags->'maxspeed' as maxspeed, " +
-      "tags->'oneway' as oneway " +
+      "tags->'oneway' as oneway " +      
       "from ways where ST_Contains(ST_GeomFromText('" + req.body.wkt + "',4326),linestring) "
 
   if(req.body.name)
-    query = query + "and tags->'name' like '%" + req.body.name + "%' ";
+    query = query + "and UPPER(tags->'name') like UPPER('%" + req.body.name + "%') ";
   if(req.body.lanes)
     query = query + "and tags->'lanes' = '" + req.body.lanes + "' ";
   if(req.body.surface)
@@ -64,7 +64,7 @@ server.post('/get-roads', cors(), (req, res, next) => {
   if(req.body.maxspeed)
     query = query + "and tags->'maxspeed' = '" + req.body.maxspeed + "' ";
   if(req.body.oneway)
-    query = query + "and tags->'oneway' = '" + req.body.oneway + "' ";
+    query = query + "and tags->'oneway' = '" + req.body.oneway + "' ";  
   if(req.body.page)
     query = query + "offset " + (req.body.page - 1) * pageSize + " limit " + pageSize
 

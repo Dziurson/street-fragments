@@ -15,62 +15,87 @@
   </div>
   <div class="row">
     <div class="col-sm">
-        <div class="form-group">
-            <label for="speed_limit">Dopuszczalna prędkość</label>
-            <select class="form-control" id="speed_limit" [(ngModel)]="maxspeed">
-              <option></option>
-              <option>20</option>
-              <option>30</option>
-              <option>40</option>
-              <option>50</option>
-              <option>60</option>
-              <option>70</option>
-              <option>80</option>
-              <option>90</option>
-              <option>100</option>
-              <option>120</option>
-              <option>140</option>
-            </select>
-          </div>
+      <div class="form-group">
+        <label for="speed_limit">Dopuszczalna prędkość</label>
+        <select class="form-control" id="speed_limit" [(ngModel)]="maxspeed">
+          <option></option>
+          <option>20</option>
+          <option>30</option>
+          <option>40</option>
+          <option>50</option>
+          <option>60</option>
+          <option>70</option>
+          <option>80</option>
+          <option>90</option>
+          <option>100</option>
+          <option>120</option>
+          <option>140</option>
+        </select>
+      </div>
     </div>
     <div class="col-sm">
-        <div class="form-group">
-            <label for="lane_count">Ilość pasów ruchu</label>
-            <select class="form-control" id="lane_count" [(ngModel)]="lanes">
-              <option></option>
-              <option>1</option>
-              <option>2</option>
-              <option>3 i więcej</option>
-            </select>
-          </div>
+      <div class="form-group">
+        <label for="lane_count">Ilość pasów ruchu</label>
+        <select class="form-control" id="lane_count" [(ngModel)]="lanes">
+          <option></option>
+          <option>1</option>
+          <option>2</option>
+          <option>3 i więcej</option>
+        </select>
+      </div>
     </div>
     <div class="col-sm">
-        <div class="form-group">
-            <label for="surface">Nawierzchnia</label>
-            <select class="form-control" id="surface" [(ngModel)]="surface">
-              <option></option>
-              <option>asphalt</option>
-              <option>concrete</option>
-              <option>paved</option>
-              <option>unpaved</option>
-              <option>compacted</option>
-            </select>
-          </div>
+      <div class="form-group">
+        <label for="surface">Nawierzchnia</label>
+        <select class="form-control" id="surface" [(ngModel)]="surface">
+          <option></option>
+          <option>asphalt</option>
+          <option>concrete</option>
+          <option>paved</option>
+          <option>unpaved</option>
+          <option>compacted</option>
+        </select>
+      </div>
     </div>
-    </div>
-    <div class="row">
+  </div>
+  <div class="row">
     <div class="col-sm">
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" [(ngModel)]="oneway">
-            <label class="form-check-label" for="defaultCheck1">
-              Jednokierunkowa
-            </label>
-          </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" [(ngModel)]="oneway">
+        <label class="form-check-label" for="defaultCheck1">
+          Jednokierunkowa
+        </label>
+      </div>
     </div>
-    </div>
+  </div>
   <button class="btn btn-primary" (click)="fetchData()">Filtruj</button>
 </div>
 <div>
+  <nav aria-label="...">
+    <ul class="pagination justify-content-end">
+      <li class="page-item" [ngClass]="{'disabled': page == 1}" (click)="setPage(page-1)">
+        <a class="page-link" tabindex="-1">Previous</a>
+      </li>
+      <li class="page-item" [ngClass]="{'active': firstPage == page}" (click)="setPage(firstPage)">
+        <a class="page-link" tabindex="-1">
+          {{firstPage}}
+        </a>
+      </li>
+      <li class="page-item" [ngClass]="{'active': secondPage == page}" (click)="setPage(secondPage)">
+        <a class="page-link" tabindex="-1">
+          {{secondPage}}
+        </a>
+      </li>
+      <li class="page-item" [ngClass]="{'active': thirdPage == page}" (click)="setPage(thirdPage)">
+        <a class="page-link" tabindex="-1">
+          {{thirdPage}}
+        </a>
+      </li>
+      <li class="page-item" (click)="setPage(page+1)">
+        <a class="page-link" tabindex="-1">Next</a>
+      </li>
+    </ul>
+  </nav>
   <table class="table">
     <thead class="thead-dark">
       <tr>
@@ -84,7 +109,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let item of noderesult; index as i">
-        <th scope="row">{{i + 1}}</th>
+        <th scope="row">{{(page - 1) * 20 + i + 1}}</th>
         <td>{{item.name}}</td>
         <td>{{item.surface}}</td>
         <td>{{item.lanes}}</td>
@@ -93,7 +118,7 @@
             <img class="sign-icon" src="assets/images/B-33_{{item.maxspeed}}.png">
           </span>
           <span *ngIf="!item.maxspeed">
-          -
+            -
           </span>
         </td>
         <td class='align-middle text-center'>
@@ -101,10 +126,35 @@
             <img class="sign-icon" src="assets/images/D-3.png">
           </span>
           <span *ngIf="!(item.oneway == 'yes')">
-          -
+            -
           </span>
         </td>
       </tr>
-    </tbody>    
+    </tbody>
   </table>
+  <nav aria-label="...">
+    <ul class="pagination justify-content-end">
+      <li class="page-item" [ngClass]="{'disabled': page == 1}" (click)="setPage(page-1)">
+        <a class="page-link" tabindex="-1">Previous</a>
+      </li>
+      <li class="page-item" [ngClass]="{'active': firstPage == page}" (click)="setPage(firstPage)">
+        <a class="page-link" tabindex="-1">
+          {{firstPage}}
+        </a>
+      </li>
+      <li class="page-item" [ngClass]="{'active': secondPage == page}" (click)="setPage(secondPage)">
+        <a class="page-link" tabindex="-1">
+          {{secondPage}}
+        </a>
+      </li>
+      <li class="page-item" [ngClass]="{'active': thirdPage == page}" (click)="setPage(thirdPage)">
+        <a class="page-link" tabindex="-1">
+          {{thirdPage}}
+        </a>
+      </li>
+      <li class="page-item" (click)="setPage(page+1)">
+        <a class="page-link" tabindex="-1">Next</a>
+      </li>
+    </ul>
+  </nav>
 </div>
