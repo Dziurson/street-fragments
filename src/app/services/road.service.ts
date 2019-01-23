@@ -10,7 +10,7 @@ export class RoadService {
   selectedBoundary: any = null;
   wktBoundary: string = null;
 
-  endpoint = 'http://localhost:3000/test';
+  endpoint = 'http://localhost:3000/get-roads';
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -24,16 +24,11 @@ export class RoadService {
     return body || {};
   }
 
-  getProducts(filters) {
-    const [searchInput, categories, page] = filters;
+  getRoads(filters, data) {
+    const [name, lanes, surface, maxspeed, oneway, page] = filters;
     const queryParams = [];
     if (page !== 1) { queryParams.push(['page', page]); }
-    if (categories && categories.length > 0) {
-      categories.forEach(c => queryParams.push(['category', c]));
-    }
-    if (searchInput) {
-      queryParams.push(['name', searchInput]);
-    }
+    const jsonObj = {name: name, lanes: lanes, surface: surface, maxspeed: maxspeed, oneway: oneway, wkt: data};
     let query = '';
     if (queryParams.length > 0) {
       const [paramKey, paramValue] = queryParams[0];
@@ -45,10 +40,6 @@ export class RoadService {
         query = query + '&' + paramKey + '=' + paramValue;
       }
     }
-    return this.http.get(this.endpoint + 'products' + query).pipe(
-      map(res => {
-        return this.extractData(res as Response);
-      })
-    );
+    return this.http.post<any>(this.endpoint, JSON.stringify(jsonObj), this.httpOptions);
   }
 }

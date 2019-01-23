@@ -10,7 +10,7 @@ import { RoadService } from 'src/app/services/road.service';
   styleUrls: ['./roads.component.css']
 })
 export class RoadsComponent implements OnInit {
- 
+
   noderesult: Road[] = roadList;
   boundary: any;
   wktBoundary: string;
@@ -29,26 +29,42 @@ export class RoadsComponent implements OnInit {
     this.wktBoundary = this.roadService.wktBoundary;
     var data = null;
 
-    if(this.boundary)
+    if (this.boundary)
       data = this.boundary.geotext;
     else
       data = this.wktBoundary;
 
-    if(data)
-      this.client.post('http://localhost:3000/get-roads', {wkt: data}).subscribe((result: string) => {
-        this.noderesult = JSON.parse(result);
-    })
+    if (data) {
+      this.fetchData();
+    }
   }
 
   fetchData() {
-    console.log(this.searchString);
-    console.log(this.surface);
-    console.log(this.lanes);
-    console.log(this.oneway);
-    console.log(this.maxspeed);
-    this.client.get('http://localhost:3000/test').subscribe((result: string) => {
-      this.noderesult = JSON.parse(result);
-    })
+    var data = null;
+  
+    if (this.boundary)
+      data = this.boundary.geotext;
+    else
+      data = this.wktBoundary;
+    if(this.searchString === '') {
+      this.searchString = null;
+    }
+    if(this.lanes === '') {
+      this.lanes = null;
+    }
+    if(this.surface === '') {
+      this.surface = null;
+    }
+    if(this.maxspeed === '') {
+      this.maxspeed = null;
+    }
+    if(this.oneway === '') {
+      this.oneway = null;
+    }
+    this.roadService.getRoads([this.searchString, this.lanes, this.surface, this.maxspeed, this.oneway, 1], data)
+    .subscribe((resp: string) => {
+      this.noderesult = JSON.parse(resp);
+    });
   }
-
 }
+
