@@ -31,3 +31,27 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+  #container
+  {
+    align-items: flex-start;
+  }
+
+
+  #filter
+  {
+    float: left;
+    margin-left: 10px;
+    margin-right: 20px;
+    width: 150px; 
+    position: -webkit-sticky;
+    position: sticky;
+  }
+  
+  #context
+  {
+    float: left;
+  }
+
+
+  
