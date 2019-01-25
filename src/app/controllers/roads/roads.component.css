@@ -32,12 +32,6 @@
     100% { transform: rotate(360deg); }
   }
 
-  #container
-  {
-    /* align-items: flex-start; */
-  }
-
-
   #filter
   {
     float: left;
@@ -45,7 +39,6 @@
     margin-right: 20px;
     margin-top: 50px; 
     width: 150px; 
-    /* position: -webkit-sticky; */
     position: fixed;
   }
   
@@ -54,6 +47,12 @@
     float: left;
     margin-left: 200px;
     width: calc(100% - 200px);
+  }
+
+  .clickable-row:hover {
+    background-color: #007bff;
+    cursor: pointer;
+    color: white;
   }
 
 

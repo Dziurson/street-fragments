@@ -3,6 +3,7 @@ import { Road } from 'src/models/road';
 import { roadList } from 'src/mock/road-mock';
 import { HttpClient } from '@angular/common/http';
 import { RoadService } from 'src/app/services/road.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-roads',
@@ -26,14 +27,14 @@ export class RoadsComponent implements OnInit {
   waiting:boolean;
 
   constructor(
-    private client: HttpClient,
+    private router: Router,
     private roadService: RoadService) { }
 
   ngOnInit() {
     //Offline Work - set false
     this.waiting = true;
     this.boundary = this.roadService.selectedBoundary;
-    this.wktBoundary = this.roadService.wktBoundary;
+    this.wktBoundary = this.roadService.wktBoundary;    
     var data = null;
 
     if (this.boundary)
@@ -85,6 +86,11 @@ export class RoadsComponent implements OnInit {
     this.firstPage = this.page - 1;
     this.secondPage = this.page;
     this.thirdPage = this.page + 1;
+  }
+
+  openRoad(road: Road) {
+    this.roadService.selectedRoad = road;
+    this.router.navigate(['/roads/details'])  
   }
 }
 

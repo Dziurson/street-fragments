@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { Road } from 'src/models/road';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ export class RoadService {
 
   selectedBoundary: any = null;
   wktBoundary: string = null;
+  selectedRoad: Road = null;
 
   endpoint = 'http://localhost:3000/get-roads';
   httpOptions = {

@@ -35,7 +35,8 @@ const Road = sequelize.define('project', {
   lanes: Sequelize.STRING,
   surface: Sequelize.STRING,
   maxspeed: Sequelize.STRING,
-  oneway: Sequelize.STRING
+  oneway: Sequelize.STRING,
+  object: Sequelize.JSON
 })
 
 sequelize.authenticate().then(() => {
@@ -52,7 +53,8 @@ server.post('/get-roads', cors(), (req, res, next) => {
       "tags->'lanes' as lanes, " +
       "tags->'surface' as surface, " +
       "tags->'maxspeed' as maxspeed, " +
-      "tags->'oneway' as oneway " +      
+      "tags->'oneway' as oneway, " +      
+      "ST_AsGeoJSON(linestring) as object " + 
       "from ways where ST_Contains(ST_GeomFromText('" + req.body.wkt + "',4326),linestring) "
 
   if(req.body.name)
