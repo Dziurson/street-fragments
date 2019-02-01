@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION get_ways(street varchar, from_street varchar, to_street varchar) RETURNS way_result AS $$
+CREATE OR REPLACE FUNCTION get_ways(street varchar, from_street varchar, to_street varchar) RETURNS bigint[] AS $$
 DECLARE
   first_way_id bigint;
   _result way_result;
@@ -22,7 +22,13 @@ BEGIN
 	FETCH first_way_cursor into first_way_id;
 	CLOSE first_way_cursor;
 
-	_result := find_ways(first_way_id,to_street,street,array[first_way_id],true); 
-	raise notice 'FINAL: %', _result; 	
+	_result := find_ways(first_way_id,to_street,street,array[first_way_id]); 
+
+  IF(_result.found) THEN
+    RETURN _result.ways;
+  ELSE
+    RETURN '{}';
+  END IF; 
+  
 END;
 $$ LANGUAGE plpgsql;

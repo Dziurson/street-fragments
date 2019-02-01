@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION find_ways(way_id_arg bigint, destination varchar, source varchar, previous bigint[], continue_search boolean) RETURNS way_result AS $$
+CREATE OR REPLACE FUNCTION find_ways(way_id_arg bigint, destination varchar, source varchar, previous bigint[]) RETURNS way_result AS $$
 DECLARE 
   get_neighbor_ways CURSOR (way_id_param bigint, way_name varchar) FOR
     select distinct wn1.way_id as way_id, w.tags->'name' from way_nodes as wn1 join ways as w on (w.id = wn1.way_id)
@@ -23,8 +23,7 @@ BEGIN
     FETCH get_neighbor_ways INTO result_way, result_name;
     CLOSE get_neighbor_ways;
 
-    IF result_way IS NULL THEN 
-      raise notice 'Value: %', 'NIC NIE MA';	  
+    IF result_way IS NULL THEN  
 	  FOR _rec IN 
       	select distinct wn1.way_id as way_id from way_nodes as wn1 join ways as w on (w.id = wn1.way_id)
       	where node_id in (
@@ -34,12 +33,10 @@ BEGIN
       and wn1.way_id != way_id_arg 
       and w.tags->'name' = source 
     LOOP
-	raise notice 'Value: %', _rec;
-	raise notice 'Value: %', array_append(previous,_rec);
        IF (previous @> array[_rec]) THEN
         CONTINUE;
       END IF;
-	  	  _loop_result := find_ways(_rec,destination,source,array_append(previous,_rec),continue_search);
+	  	  _loop_result := find_ways(_rec,destination,source,array_append(previous,_rec));
 		  IF (_loop_result.found = true) THEN
 		    RETURN _loop_result;
 		  END IF;
@@ -48,8 +45,6 @@ BEGIN
 	  _loop_result.found = false;
 	  RETURN _loop_result;																	 
     ELSE
-      raise notice 'Value: %', result_way;  
-      raise notice 'Scieżka: %', _path; 
 	  _result.ways = _path;
 	  _result.found = true;
 	  RETURN _result;
