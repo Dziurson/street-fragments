@@ -13,41 +13,50 @@ import * as Terraformer from 'terraformer-wkt-parser';
 export class RoadsComponent implements OnInit {
 
   streetSections: Road[];
-  boundary: any;  
+  boundary: any;
   searchString: string;
+  searchText: string;
   oneway;
   surface;
   lanes;
   maxspeed;
-  page: number =  1;
+  page: number = 1;
   firstPage: number = 1;
   secondPage: number = 2;
   thirdPage: number = 3;
   waiting: boolean;
+
   map: Leaflet.Map = null;
-  searchText: string;
+  section: Leaflet.FeatureGroup = null;
+  selectedSection: Leaflet.GeoJSON = null;
+
 
   boundStyle: any = {
-    color: "#ff0000",   
+    color: "#ff0000",
     fillOpacity: 0,
     weight: 2,
     opacity: 1,
   }
-  roadStyle: any = {
+  sectionStyle: any = {
     color: "#ff7800",
     weight: 5,
     opacity: 0.65
   }
+  selectedSectionStyle: any = {
+    color: "#0000ff",
+    weight: 5,
+    opacity: 1
+  }
 
-  constructor(    
+  constructor(
     private router: Router,
     private roadService: RoadService) { }
 
   ngOnInit() {
-    this.boundary = this.roadService.getSelectedBoundary(); 
+    this.boundary = this.roadService.getSelectedBoundary();
 
     if (this.boundary)
-      this.initMap(this.boundary.geotext); 
+      this.initMap(this.boundary.geotext);
     else
       this.router.navigate(['/']);
   }
@@ -67,25 +76,25 @@ export class RoadsComponent implements OnInit {
     this.map.fitBounds(geoJson.getBounds());
   }
 
-  fetchData() {    
+  fetchData() {
     this.waiting = true;
     var data = null;
-  
+
     if (this.boundary)
-      data = this.boundary.geotext;    
-    if(this.searchString === '') {
+      data = this.boundary.geotext;
+    if (this.searchString === '') {
       this.searchString = null;
     }
-    if(this.lanes === '') {
+    if (this.lanes === '') {
       this.lanes = null;
     }
-    if(this.surface === '') {
+    if (this.surface === '') {
       this.surface = null;
     }
-    if(this.maxspeed === '') {
+    if (this.maxspeed === '') {
       this.maxspeed = null;
     }
-    if(this.oneway === '') {
+    if (this.oneway === '') {
       this.oneway = null;
     }
     // this.roadService.getRoads([this.searchString, this.lanes, this.surface, this.maxspeed, this.oneway, this.page], data)
@@ -98,32 +107,46 @@ export class RoadsComponent implements OnInit {
   setPage(page: number) {
     this.page = page;
     this.fetchData();
-    if(this.page == 1)
+    if (this.page == 1)
       return;
     this.firstPage = this.page - 1;
     this.secondPage = this.page;
     this.thirdPage = this.page + 1;
   }
 
-  openRoad(road: Road) {
-    var geoJson = Leaflet.geoJSON(JSON.parse(road.object), this.roadStyle);
-    geoJson.addTo(this.map);
-    this.map.fitBounds(geoJson.getBounds()); 
+  showSelectedSection(selectedSection: Road) {
+    if(this.selectedSection)
+      this.selectedSection.removeFrom(this.map);
+    this.selectedSection = Leaflet.geoJSON(JSON.parse(selectedSection.object), this.selectedSectionStyle);
+    this.selectedSection.addTo(this.map);
+    this.map.fitBounds(this.selectedSection.getBounds());
   }
 
   searchByText() {
-    if(this.searchText.match(/^[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ]+\s*\(\s*[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ]+\s*-\s*[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ]+\s*\)/)) {
-      var streets = this.searchText.match(/[a-zA-ZźćńółęąśŻŹĆĄŚĘŁÓŃ]+/g);
+    if (this.searchText.match(/^[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s*\(\s*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s*-\s*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s*\)/)) {
+      var streets = this.searchText.match(/[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+/g);
       this.waiting = true;
-      this.roadService.getRoadFromTo({street: streets[0], street_from: streets[1], street_to: streets[2]}).subscribe((result) => {
+      this.roadService.getRoadFromTo({ street: streets[0], street_from: streets[1], street_to: streets[2] }).subscribe((result) => {
+        console.log(result);
+        if (this.section) {
+          this.section.removeFrom(this.map);
+          this.section = null;
+        }
         this.streetSections = JSON.parse(result);
-        this.streetSections.forEach(road => {
-          var geoJson = Leaflet.geoJSON(JSON.parse(road.object), this.roadStyle);
-            geoJson.addTo(this.map);
-            this.map.fitBounds(geoJson.getBounds()); 
-        })
+        if (this.streetSections.length != 0)
+          this.showOnMap();
         this.waiting = false;
       });
+    }
+  }
+
+  showOnMap() {
+    if (this.map) {      
+      this.section = Leaflet.featureGroup(this.streetSections.map(road => {
+        return Leaflet.geoJSON(JSON.parse(road.object), this.sectionStyle)
+      }));
+      this.section.addTo(this.map);
+      this.map.fitBounds(this.section.getBounds());
     }
   }
 }
