@@ -115,7 +115,7 @@ export class RoadsComponent implements OnInit {
   }
 
   showSelectedSection(selectedSection: Road) {
-    if(this.selectedSection)
+    if (this.selectedSection)
       this.selectedSection.removeFrom(this.map);
     this.selectedSection = Leaflet.geoJSON(JSON.parse(selectedSection.object), this.selectedSectionStyle);
     this.selectedSection.addTo(this.map);
@@ -123,25 +123,31 @@ export class RoadsComponent implements OnInit {
   }
 
   searchByText() {
-    if (this.searchText.match(/^[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s*\(\s*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s*-\s*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s*\)/)) {
+    if (this.searchText.match(/^[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s*\(\s*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s*-\s*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s*\)\s*$/)) {
       var streets = this.searchText.match(/[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+/g);
       this.waiting = true;
       this.roadService.getRoadFromTo({ street: streets[0], street_from: streets[1], street_to: streets[2] }).subscribe((result) => {
-        console.log(result);
-        if (this.section) {
-          this.section.removeFrom(this.map);
-          this.section = null;
-        }
-        this.streetSections = JSON.parse(result);
-        if (this.streetSections.length != 0)
-          this.showOnMap();
+        this.handleSerachResult(result);
+        this.waiting = false;
+      });
+    }
+    if (this.searchText.match(/^([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]$/)) {
+      var street = this.searchText.match(/^([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]$/)[0];
+      this.waiting = true;
+      this.roadService.getRoad(street).subscribe((result) => {
+        this.handleSerachResult(result)
         this.waiting = false;
       });
     }
   }
 
-  showOnMap() {
-    if (this.map) {      
+  handleSerachResult(result) {
+    if (this.section) {
+      this.section.removeFrom(this.map);
+      this.section = null;
+    }
+    this.streetSections = JSON.parse(result);
+    if (this.streetSections.length != 0 && this.map) {
       this.section = Leaflet.featureGroup(this.streetSections.map(road => {
         return Leaflet.geoJSON(JSON.parse(road.object), this.sectionStyle)
       }));

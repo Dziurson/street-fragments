@@ -33,7 +33,7 @@ BEGIN
       and wn1.way_id != way_id_arg 
       and w.tags->'name' = source 
     LOOP
-       IF (previous @> array[_rec]) THEN
+      IF (previous @> array[_rec]) THEN
         CONTINUE;
       END IF;
 	  	  _loop_result := find_ways(_rec,destination,source,array_append(previous,_rec));

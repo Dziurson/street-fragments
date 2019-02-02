@@ -10,7 +10,8 @@ export class RoadService {
   selectedBoundary: any = null;
   selectedRoad: Road = null;
 
-  getRoadsFromToUrl: string = 'http://localhost:3000/get-roads-from-to';
+  getRoadUrl: string = 'http://localhost:3000/get-road';
+  getRoadFromToUrl: string = 'http://localhost:3000/get-road-from-to';
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -33,6 +34,11 @@ export class RoadService {
 
   getRoadFromTo(streets) {   
     const jsonObj = { street: streets.street, street_from: streets.street_from, street_to: streets.street_to, wkt: this.selectedBoundary.geotext};    
-    return this.http.post<any>(this.getRoadsFromToUrl, jsonObj, this.httpOptions);
+    return this.http.post<any>(this.getRoadFromToUrl, jsonObj, this.httpOptions);
+  }
+
+  getRoad(street) {
+    const jsonObj = { street: street, wkt: this.selectedBoundary.geotext};    
+    return this.http.post<any>(this.getRoadUrl, jsonObj, this.httpOptions);
   }
 }

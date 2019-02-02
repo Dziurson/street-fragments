@@ -7,11 +7,9 @@ const hostname = 'localhost';
 const port = 3000;
 const server = express();
 
-const pageSize = 20;
-
 server.use(cors());
-server.options('/get-roads', cors());
-server.options('/get-roads-from-to', cors());
+server.options('/get-road', cors());
+server.options('/get-road-from-to', cors());
 server.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -47,7 +45,7 @@ sequelize.authenticate().then(() => {
     console.error('Unable to connect to the database:', err);
   });
 
-server.post('/get-roads', cors(), (req, res, next) => { 
+server.post('/get-road', cors(), (req, res, next) => { 
 
   var query = 
       "select tags->'name' as name, " +
@@ -56,27 +54,15 @@ server.post('/get-roads', cors(), (req, res, next) => {
       "tags->'maxspeed' as maxspeed, " +
       "tags->'oneway' as oneway, " +      
       "ST_AsGeoJSON(linestring) as object " + 
-      "from ways where ST_Contains(ST_GeomFromText('" + req.body.wkt + "',4326),linestring) "
-
-  if(req.body.name)
-    query = query + "and UPPER(tags->'name') like UPPER('%" + req.body.name + "%') ";
-  if(req.body.lanes)
-    query = query + "and tags->'lanes' = '" + req.body.lanes + "' ";
-  if(req.body.surface)
-    query = query + "and tags->'surface' = '" + req.body.surface + "' ";
-  if(req.body.maxspeed)
-    query = query + "and tags->'maxspeed' = '" + req.body.maxspeed + "' ";
-  if(req.body.oneway)
-    query = query + "and tags->'oneway' = '" + req.body.oneway + "' ";  
-  if(req.body.page)
-    query = query + "offset " + (req.body.page - 1) * pageSize + " limit " + pageSize
+      "from ways where ST_Contains(ST_GeomFromText('" + req.body.wkt + "',4326),linestring) " + 
+      "and upper(tags->'name') like (upper('%" + req.body.street + "%'))";
 
   sequelize.query(query, { model: Road, mapToModel: true }).then(results => {
       res.json(JSON.stringify(results));
     })
 });
 
-server.post('/get-roads-from-to', cors(), (req, res, next) => { 
+server.post('/get-road-from-to', cors(), (req, res, next) => { 
 
   var query = 
       "select tags->'name' as name, " +
