@@ -4,6 +4,9 @@ import { roadList } from 'src/mock/road-mock';
 import { HttpClient } from '@angular/common/http';
 import { RoadService } from 'src/app/services/road.service';
 import { Router } from '@angular/router';
+import * as Leaflet from "leaflet";
+import { format } from 'util';
+import * as Terraformer from 'terraformer-wkt-parser';
 
 @Component({
   selector: 'app-roads',
@@ -24,7 +27,19 @@ export class RoadsComponent implements OnInit {
   firstPage: number = 1;
   secondPage: number = 2;
   thirdPage: number = 3;
-  waiting:boolean;
+  waiting: boolean;
+  map: Leaflet.Map = null;
+  boundStyle: any = {
+    color: "#ff0000",   
+    fillOpacity: 0,
+    weight: 3,
+    opacity: 1,
+  }
+  roadStyle: any = {
+    color: "#ff7800",
+    weight: 5,
+    opacity: 0.65
+  }
 
   constructor(
     private router: Router,
@@ -43,8 +58,23 @@ export class RoadsComponent implements OnInit {
       data = this.wktBoundary;
 
     if (data) {
+      this.initMap(data);
       this.fetchData();
-    }
+    }    
+  }
+
+  initMap(data) {
+    this.map = Leaflet.map('map-wrapper', {
+      center: [51.295278, 18.151944],
+      zoom: 5
+    });
+    Leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 17,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(this.map);
+    var geoJson = Leaflet.geoJSON(Terraformer.parse(data), this.boundStyle);
+    geoJson.addTo(this.map);
+    this.map.fitBounds(geoJson.getBounds());
   }
 
   fetchData() {
@@ -89,8 +119,11 @@ export class RoadsComponent implements OnInit {
   }
 
   openRoad(road: Road) {
-    this.roadService.selectedRoad = road;
-    this.router.navigate(['/roads/details'])  
+    var geoJson = Leaflet.geoJSON(JSON.parse(road.object), this.roadStyle);
+    geoJson.addTo(this.map);
+    this.map.fitBounds(geoJson.getBounds());
+    //this.roadService.selectedRoad = road;    
+    //this.router.navigate(['/roads/details'])  
   }
 }
 
