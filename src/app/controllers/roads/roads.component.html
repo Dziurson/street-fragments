@@ -9,6 +9,12 @@
       </span>
       <div id="map-wrapper"></div>
     </h2>
+    <div class="input-group mb-2">
+      <input type="text" class="form-control ml-2" id="searchInput" placeholder="Wyszukaj" [(ngModel)]="searchText">
+      <span class="input-group-btn" (click)="searchByText()">
+        <button class="btn btn-primary mx-2" type="button"><i class="fas fa-search"></i> Szukaj</button>
+      </span>
+    </div>
   </div>
   <div id="filter">
     <div class="form-group">
@@ -122,7 +128,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of noderesult; index as i" (click)="openRoad(item)" class="clickable-row">
+          <tr *ngFor="let item of streetSections; index as i" (click)="openRoad(item)" class="clickable-row">
             <th scope="row">{{(page - 1) * 20 + i + 1}}</th>
             <td>{{item.name}}</td>
             <td>{{item.surface}}</td>

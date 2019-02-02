@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RoadService } from 'src/app/services/road.service';
 import { Router } from '@angular/router';
-import WKT from 'ol/format/WKT';
 
 @Component({
   selector: 'app-home',
@@ -31,14 +30,12 @@ export class HomeComponent implements OnInit {
   }
 
   findByBoundary() {
-    this.roadService.selectedBoundary = null;
-    this.roadService.wktBoundary = this.polygonString;
+    this.roadService.setSelectedBoundary({ geotext: this.polygonString, display_name: "Ręcznie wprowadzone dane" });    
     this.router.navigate(['/roads']);
   }
 
   selectBoundary(boundary: any) {    
-    this.roadService.selectedBoundary = boundary;
-    this.roadService.wktBoundary = null;
+    this.roadService.setSelectedBoundary(boundary);   
     this.router.navigate(['/roads']);
   }
 

@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Road } from 'src/models/road';
-import { roadList } from 'src/mock/road-mock';
-import { HttpClient } from '@angular/common/http';
 import { RoadService } from 'src/app/services/road.service';
 import { Router } from '@angular/router';
 import * as Leaflet from "leaflet";
-import { format } from 'util';
 import * as Terraformer from 'terraformer-wkt-parser';
 
 @Component({
@@ -15,9 +12,8 @@ import * as Terraformer from 'terraformer-wkt-parser';
 })
 export class RoadsComponent implements OnInit {
 
-  noderesult: Road[] = roadList;
-  boundary: any;
-  wktBoundary: string;
+  streetSections: Road[];
+  boundary: any;  
   searchString: string;
   oneway;
   surface;
@@ -29,10 +25,12 @@ export class RoadsComponent implements OnInit {
   thirdPage: number = 3;
   waiting: boolean;
   map: Leaflet.Map = null;
+  searchText: string;
+
   boundStyle: any = {
     color: "#ff0000",   
     fillOpacity: 0,
-    weight: 3,
+    weight: 2,
     opacity: 1,
   }
   roadStyle: any = {
@@ -41,26 +39,17 @@ export class RoadsComponent implements OnInit {
     opacity: 0.65
   }
 
-  constructor(
+  constructor(    
     private router: Router,
     private roadService: RoadService) { }
 
   ngOnInit() {
-    //Offline Work - set false
-    this.waiting = true;
-    this.boundary = this.roadService.selectedBoundary;
-    this.wktBoundary = this.roadService.wktBoundary;    
-    var data = null;
+    this.boundary = this.roadService.getSelectedBoundary(); 
 
     if (this.boundary)
-      data = this.boundary.geotext;
+      this.initMap(this.boundary.geotext); 
     else
-      data = this.wktBoundary;
-
-    if (data) {
-      this.initMap(data);
-      this.fetchData();
-    }    
+      this.router.navigate(['/']);
   }
 
   initMap(data) {
@@ -72,20 +61,18 @@ export class RoadsComponent implements OnInit {
       maxZoom: 17,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(this.map);
+
     var geoJson = Leaflet.geoJSON(Terraformer.parse(data), this.boundStyle);
     geoJson.addTo(this.map);
     this.map.fitBounds(geoJson.getBounds());
   }
 
-  fetchData() {
-    //Offline Work - set false
+  fetchData() {    
     this.waiting = true;
     var data = null;
   
     if (this.boundary)
-      data = this.boundary.geotext;
-    else
-      data = this.wktBoundary;
+      data = this.boundary.geotext;    
     if(this.searchString === '') {
       this.searchString = null;
     }
@@ -101,11 +88,11 @@ export class RoadsComponent implements OnInit {
     if(this.oneway === '') {
       this.oneway = null;
     }
-    this.roadService.getRoads([this.searchString, this.lanes, this.surface, this.maxspeed, this.oneway, this.page], data)
-    .subscribe((resp: string) => {
-      this.noderesult = JSON.parse(resp);
-      this.waiting = false;
-    });
+    // this.roadService.getRoads([this.searchString, this.lanes, this.surface, this.maxspeed, this.oneway, this.page], data)
+    // .subscribe((resp: string) => {
+    //   this.noderesult = JSON.parse(resp);
+    //   this.waiting = false;
+    // });
   }
 
   setPage(page: number) {
@@ -121,9 +108,23 @@ export class RoadsComponent implements OnInit {
   openRoad(road: Road) {
     var geoJson = Leaflet.geoJSON(JSON.parse(road.object), this.roadStyle);
     geoJson.addTo(this.map);
-    this.map.fitBounds(geoJson.getBounds());
-    //this.roadService.selectedRoad = road;    
-    //this.router.navigate(['/roads/details'])  
+    this.map.fitBounds(geoJson.getBounds()); 
+  }
+
+  searchByText() {
+    if(this.searchText.match(/^[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ]+\s*\(\s*[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ]+\s*-\s*[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ]+\s*\)/)) {
+      var streets = this.searchText.match(/[a-zA-ZźćńółęąśŻŹĆĄŚĘŁÓŃ]+/g);
+      this.waiting = true;
+      this.roadService.getRoadFromTo({street: streets[0], street_from: streets[1], street_to: streets[2]}).subscribe((result) => {
+        this.streetSections = JSON.parse(result);
+        this.streetSections.forEach(road => {
+          var geoJson = Leaflet.geoJSON(JSON.parse(road.object), this.roadStyle);
+            geoJson.addTo(this.map);
+            this.map.fitBounds(geoJson.getBounds()); 
+        })
+        this.waiting = false;
+      });
+    }
   }
 }
 

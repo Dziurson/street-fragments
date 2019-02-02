@@ -11,7 +11,6 @@ import { MatTableModule } from '@angular/material/table';
 import { HomeComponent } from './controllers/home/home.component';
 import { RoadsComponent } from './controllers/roads/roads.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { RoadComponent } from './controllers/road/road.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +18,6 @@ import { RoadComponent } from './controllers/road/road.component';
     HomeComponent,
     RoadsComponent,
     NavbarComponent,
-    RoadComponent
   ],
   imports: [
     BrowserModule,

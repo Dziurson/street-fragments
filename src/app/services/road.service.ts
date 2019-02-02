@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 import { Road } from 'src/models/road';
 
 @Injectable({
@@ -9,28 +8,31 @@ import { Road } from 'src/models/road';
 export class RoadService {
 
   selectedBoundary: any = null;
-  wktBoundary: string = null;
   selectedRoad: Road = null;
 
-  endpoint = 'http://localhost:3000/get-roads';
+  getRoadsFromToUrl: string = 'http://localhost:3000/get-roads-from-to';
+
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
     })
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { } 
 
-  private extractData(res: Response) {
-    let body = res;
-    return body || {};
+  setSelectedBoundary(selectedBoundary: any) {
+    this.selectedBoundary = selectedBoundary;
+    sessionStorage.setItem('selectedBoundary', JSON.stringify(selectedBoundary));
   }
 
-  getRoads(filters, data) {
-    const [name, lanes, surface, maxspeed, oneway, page] = filters;
-    
-    const jsonObj = {name: name, lanes: lanes, surface: surface, maxspeed: maxspeed, oneway: oneway, page: page, wkt: data};
-    
-    return this.http.post<any>(this.endpoint, jsonObj, this.httpOptions);
+  getSelectedBoundary() {
+    if(!this.selectedBoundary)
+      this.selectedBoundary = JSON.parse(sessionStorage.getItem('selectedBoundary'));
+    return this.selectedBoundary;
+  }
+
+  getRoadFromTo(streets) {   
+    const jsonObj = { street: streets.street, street_from: streets.street_from, street_to: streets.street_to, wkt: this.selectedBoundary.geotext};    
+    return this.http.post<any>(this.getRoadsFromToUrl, jsonObj, this.httpOptions);
   }
 }
