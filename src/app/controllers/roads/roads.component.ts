@@ -13,8 +13,7 @@ import * as Terraformer from 'terraformer-wkt-parser';
 export class RoadsComponent implements OnInit {
 
   streetSections: Road[];
-  boundary: any;
-  searchString: string;
+  boundary: any;  
   searchText: string;
   oneway;
   surface;
@@ -29,8 +28,7 @@ export class RoadsComponent implements OnInit {
   map: Leaflet.Map = null;
   section: Leaflet.FeatureGroup = null;
   selectedSection: Leaflet.GeoJSON = null;
-
-
+  
   boundStyle: any = {
     color: "#ff0000",
     fillOpacity: 0,
@@ -76,15 +74,8 @@ export class RoadsComponent implements OnInit {
     this.map.fitBounds(geoJson.getBounds());
   }
 
-  fetchData() {
-    this.waiting = true;
-    var data = null;
+  fetchData() {     
 
-    if (this.boundary)
-      data = this.boundary.geotext;
-    if (this.searchString === '') {
-      this.searchString = null;
-    }
     if (this.lanes === '') {
       this.lanes = null;
     }
@@ -96,12 +87,7 @@ export class RoadsComponent implements OnInit {
     }
     if (this.oneway === '') {
       this.oneway = null;
-    }
-    // this.roadService.getRoads([this.searchString, this.lanes, this.surface, this.maxspeed, this.oneway, this.page], data)
-    // .subscribe((resp: string) => {
-    //   this.noderesult = JSON.parse(resp);
-    //   this.waiting = false;
-    // });
+    }    
   }
 
   setPage(page: number) {
