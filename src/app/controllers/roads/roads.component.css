@@ -47,6 +47,9 @@
   float: left;
   margin-left: 200px;
   width: calc(100% - 200px);
+  height: 500px;
+  min-height: 300px;
+  overflow: auto;
 }
 
 .clickable-row:hover {

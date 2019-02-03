@@ -4,6 +4,15 @@ import { RoadService } from 'src/app/services/road.service';
 import { Router } from '@angular/router';
 import * as Leaflet from "leaflet";
 import * as Terraformer from 'terraformer-wkt-parser';
+import * as $ from 'jquery';
+
+$(() => {
+  var content = $('#context');  
+  content.height(window.innerHeight - content.position().top);
+  $(window).resize(() => {
+    content.height(window.innerHeight - content.position().top);
+  })
+})
 
 const streetPattern = "([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]";
 const singleStreetPattern = `^${streetPattern}$`;
