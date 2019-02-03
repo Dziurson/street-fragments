@@ -28,7 +28,7 @@ export class RoadsComponent implements OnInit {
   map: Leaflet.Map = null;
   section: Leaflet.FeatureGroup = null;
   selectedSection: Leaflet.GeoJSON = null;
-  
+
   boundStyle: any = {
     color: "#ff0000",
     fillOpacity: 0,
@@ -109,8 +109,16 @@ export class RoadsComponent implements OnInit {
   }
 
   searchByText() {
-    if (this.searchText.match(/^[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s*\(\s*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s*-\s*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s*\)\s*$/)) {
-      var streets = this.searchText.match(/[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+/g);
+    if (this.section) {
+      this.section.removeFrom(this.map);
+      this.section = null;
+    }
+    if (this.selectedSection) {
+      this.selectedSection.removeFrom(this.map);
+      this.selectedSection = null;
+    }
+    if (this.searchText.match(/^([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]\s*\(\s*([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]\s*-\s*([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]\s*\)\s*$/)) {
+      var streets = this.searchText.match(/([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]/g);
       this.waiting = true;
       this.roadService.getRoadFromTo({ street: streets[0], street_from: streets[1], street_to: streets[2] }).subscribe((result) => {
         this.handleSerachResult(result);
@@ -127,11 +135,7 @@ export class RoadsComponent implements OnInit {
     }
   }
 
-  handleSerachResult(result) {
-    if (this.section) {
-      this.section.removeFrom(this.map);
-      this.section = null;
-    }
+  handleSerachResult(result) {    
     this.streetSections = JSON.parse(result);
     if (this.streetSections.length != 0 && this.map) {
       this.section = Leaflet.featureGroup(this.streetSections.map(road => {
