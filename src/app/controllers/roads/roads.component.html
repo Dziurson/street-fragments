@@ -6,181 +6,125 @@
       </span>
       <span *ngIf="wktBoundary != null">
         Ręcznie wprowadzone dane
-      </span>      
+      </span>
     </h2>
     <div id="map-wrapper" class="mx-2 mb-2"></div>
     <div class="input-group mb-2">
       <input type="text" class="form-control ml-2" id="searchInput" placeholder="Wyszukaj" [(ngModel)]="searchText">
       <span class="input-group-btn" (click)="searchByText()">
-        <button class="btn btn-primary mx-2" type="button" [disabled]="!searchText || searchText.length < 3"><i class="fas fa-search"></i> Szukaj</button>
-      </span>      
-    </div>    
+        <button class="btn btn-primary mx-2" type="button" [disabled]="!searchText || searchText.length < 3"><i class="fas fa-search"></i>
+          Szukaj</button>
+      </span>
+    </div>
   </div>
-  <div id="filter">
-    <div class="form-group">      
+  <div class="row mx-2">
+    <div id="filter" class="col-2 border-right mb-2">
+      <div class="filter-header">
+        <h2 class="filter-title">
+          Filtry
+        </h2>
+      </div>
+      <div class="form-group">
+        <label for="surfaceType">Nawierzchnia</label>
+        <select class="form-control" id="surfaceType" [(ngModel)]="surface">
+          <option></option>
+          <option value="asphalt" label="Asfalt"></option>
+          <option value="concrete" label="Beton"></option>
+          <option value="paving_stones" label="Kostka Brukowa"></option>
+          <option value="cobblestone" label="Bruk"></option>
+          <option value="unpaved" label="Nieutwardzona"></option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="speed_limit">Dopuszczalna prędkość</label>
+        <select class="form-control" id="speed_limit" [(ngModel)]="maxspeed">
+          <option></option>
+          <option value="20" label="20 km/h"></option>
+          <option value="30" label="30 km/h"></option>
+          <option value="40" label="40 km/h"></option>
+          <option value="50" label="50 km/h"></option>
+          <option value="60" label="60 km/h"></option>
+          <option value="70" label="70 km/h"></option>
+          <option value="80" label="80 km/h"></option>
+          <option value="90" label="90 km/h"></option>
+          <option value="100" label="100 km/h"></option>
+          <option value="120" label="120 km/h"></option>
+          <option value="140" label="140 km/h"></option>          
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="lane_count">Ilość pasów ruchu</label>
+        <select class="form-control" id="lane_count" [(ngModel)]="lanes">
+          <option></option>
+          <option value="1" label="Jeden"></option>
+          <option value="2" label="Dwa"></option>
+          <option value="3" label="Trzy i więcej"></option>          
+        </select>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <input class="form-check-input" type="checkbox" value="" [(ngModel)]="oneway">
+          Jednokierunkowa {{oneway}}
+        </label>
+      </div>
       <div class="row">
-        <div class="col-sm">
-          <div class="form-group">
-            <br>
-            <label for="speed_limit">Dopuszczalna prędkość</label>
-            <select class="form-control" id="speed_limit" [(ngModel)]="maxspeed">
-              <option></option>
-              <option>20</option>
-              <option>30</option>
-              <option>40</option>
-              <option>50</option>
-              <option>60</option>
-              <option>70</option>
-              <option>80</option>
-              <option>90</option>
-              <option>100</option>
-              <option>120</option>
-              <option>140</option>
-            </select>
-          </div>
+        <div class="col-12 col-lg-6 mt-2">
+          <button class="btn btn-primary btn-block" (click)="clearFilters()"><i class="fas fa-eraser"></i> Wyczyść</button>
         </div>
-        <br>
-        <div class="col-sm">
-          <div class="form-group">
-            <br>
-            <label for="lane_count">Ilość pasów ruchu</label>
-            <select class="form-control" id="lane_count" [(ngModel)]="lanes">
-              <option></option>
-              <option>1</option>
-              <option>2</option>
-              <option>3 i więcej</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-sm">
-          <div class="form-group">
-            <br>
-            <label for="surface">Nawierzchnia</label>
-            <select class="form-control" id="surface" [(ngModel)]="surface">
-              <option></option>
-              <option>asphalt</option>
-              <option>concrete</option>
-              <option>paved</option>
-              <option>unpaved</option>
-              <option>compacted</option>
-            </select>
-          </div>
+        <div class="col-12 col-lg-6 mt-2">
+          <button class="btn btn-primary btn-block" (click)="filterData()"><i class="fas fa-filter"></i> Filtruj</button>
         </div>
       </div>
-      <div class="row">
-        <div class="col-sm">
-          <div class="form-check">
-            <br>
-            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" [(ngModel)]="oneway">
-            <label class="form-check-label" for="defaultCheck1">
-              Jednokierunkowa
-            </label>
-          </div>
-          <br>
-        </div>
-      </div>
-      <button class="btn btn-primary btn-block" (click)="fetchData()">Filtruj</button>
     </div>
-  </div>
-  <div id="context">
-    <div *ngIf="!waiting">
-      <nav aria-label="...">
-        <ul class="pagination justify-content-end">
-          <li class="page-item" [ngClass]="{'button-hidden': page == 1}" (click)="setPage(page-1)">
-            <a class="page-link" tabindex="-1">Poprzednia</a>
-          </li>
-          <li class="page-item" [ngClass]="{'active': firstPage == page}" (click)="setPage(firstPage)">
-            <a class="page-link" tabindex="-1">
-              {{firstPage}}
-            </a>
-          </li>
-          <li class="page-item" [ngClass]="{'active': secondPage == page}" (click)="setPage(secondPage)">
-            <a class="page-link" tabindex="-1">
-              {{secondPage}}
-            </a>
-          </li>
-          <li class="page-item" [ngClass]="{'active': thirdPage == page}" (click)="setPage(thirdPage)">
-            <a class="page-link" tabindex="-1">
-              {{thirdPage}}
-            </a>
-          </li>
-          <li class="page-item" (click)="setPage(page+1)">
-            <a class="page-link" tabindex="-1">Następna</a>
-          </li>
-        </ul>
-      </nav>
-      <table class="table">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nazwa</th>
-            <th scope="col">Nawierzchnia</th>
-            <th scope="col">Ilość Pasów</th>
-            <th scope="col" class="text-center">Dopuszczalna prędkość</th>
-            <th scope="col" class="text-center">Jednokierunkowa</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of streetSections; index as i" (click)="showSelectedSection(item)" class="clickable-row">
-            <th scope="row">{{(page - 1) * 20 + i + 1}}</th>
-            <td>{{item.name}}</td>
-            <td>{{item.surface}}</td>
-            <td>{{item.lanes}}</td>
-            <td class='align-middle text-center'>
-              <span *ngIf="item.maxspeed">
-                <img class="sign-icon" src="assets/images/B-33_{{item.maxspeed}}.png">
-              </span>
-              <span *ngIf="!item.maxspeed">
-                -
-              </span>
-            </td>
-            <td class='align-middle text-center'>
-              <span *ngIf="item.oneway == 'yes'">
-                <img class="sign-icon" src="assets/images/D-3.png">
-              </span>
-              <span *ngIf="!(item.oneway == 'yes')">
-                -
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <nav aria-label="...">
-        <ul class="pagination justify-content-end">
-          <li class="page-item" [ngClass]="{'button-hidden': page == 1}" (click)="setPage(page-1)">
-            <a class="page-link" tabindex="-1">Poprzednia</a>
-          </li>
-          <li class="page-item" [ngClass]="{'active': firstPage == page}" (click)="setPage(firstPage)">
-            <a class="page-link" tabindex="-1">
-              {{firstPage}}
-            </a>
-          </li>
-          <li class="page-item" [ngClass]="{'active': secondPage == page}" (click)="setPage(secondPage)">
-            <a class="page-link" tabindex="-1">
-              {{secondPage}}
-            </a>
-          </li>
-          <li class="page-item" [ngClass]="{'active': thirdPage == page}" (click)="setPage(thirdPage)">
-            <a class="page-link" tabindex="-1">
-              {{thirdPage}}
-            </a>
-          </li>
-          <li class="page-item" (click)="setPage(page+1)">
-            <a class="page-link" tabindex="-1">Następna</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-    <div *ngIf="waiting" class="text-center loading-screen">
-      <div>
-        <h4>
-          Wczytywanie danych z bazy...
-        </h4>
+    <div id="context" class="col-10">
+      <div *ngIf="!waiting">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nazwa</th>
+              <th scope="col">Nawierzchnia</th>
+              <th scope="col">Ilość Pasów</th>
+              <th scope="col" class="text-center">Dopuszczalna prędkość</th>
+              <th scope="col" class="text-center">Jednokierunkowa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of streetSections; index as i" (click)="showSelectedSection(item)" class="clickable-row">
+              <th scope="row">{{ i + 1 }}</th>
+              <td>{{ item.name }}</td>
+              <td>{{ surfaceMap(item.surface) }}</td>
+              <td>{{ item.lanes }}</td>
+              <td class='align-middle text-center'>
+                <span *ngIf="item.maxspeed">
+                  <img class="sign-icon" src="assets/images/B-33_{{item.maxspeed}}.png">
+                </span>
+                <span *ngIf="!item.maxspeed">
+                  -
+                </span>
+              </td>
+              <td class='align-middle text-center'>
+                <span *ngIf="item.oneway == 'yes'">
+                  <img class="sign-icon" src="assets/images/D-3.png">
+                </span>
+                <span *ngIf="!(item.oneway == 'yes')">
+                  -
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="align-middle">
-        <div class="loader"></div>
+      <div *ngIf="waiting" class="text-center loading-screen">
+        <div>
+          <h4>
+            Wczytywanie danych z bazy...
+          </h4>
+        </div>
+        <div class="align-middle">
+          <div class="loader"></div>
+        </div>
       </div>
     </div>
   </div>
-  <div style="clear: both;"></div>
 </div>

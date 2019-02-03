@@ -26,17 +26,14 @@ const searchFromToPattern = `^${streetPattern}\\s*\\(\\s*${streetPattern}\\s*-\\
 export class RoadsComponent implements OnInit {
 
   streetSections: Road[];
+  filteredStreetSections: Road[];
   boundary: any;  
   searchText: string;
-  oneway;
-  surface;
-  lanes;
-  maxspeed;
-  page: number = 1;
-  firstPage: number = 1;
-  secondPage: number = 2;
-  thirdPage: number = 3;
-  waiting: boolean;
+  oneway: boolean = false;
+  surface: string;
+  lanes: string;
+  maxspeed: string;  
+  waiting: boolean = false;
 
   map: Leaflet.Map = null;
   section: Leaflet.FeatureGroup = null;
@@ -85,33 +82,7 @@ export class RoadsComponent implements OnInit {
     var geoJson = Leaflet.geoJSON(Terraformer.parse(data), this.boundStyle);
     geoJson.addTo(this.map);
     this.map.fitBounds(geoJson.getBounds());
-  }
-
-  fetchData() {     
-
-    if (this.lanes === '') {
-      this.lanes = null;
-    }
-    if (this.surface === '') {
-      this.surface = null;
-    }
-    if (this.maxspeed === '') {
-      this.maxspeed = null;
-    }
-    if (this.oneway === '') {
-      this.oneway = null;
-    }    
-  }
-
-  setPage(page: number) {
-    this.page = page;
-    this.fetchData();
-    if (this.page == 1)
-      return;
-    this.firstPage = this.page - 1;
-    this.secondPage = this.page;
-    this.thirdPage = this.page + 1;
-  }
+  } 
 
   showSelectedSection(selectedSection: Road) {
     if (this.selectedSection)
@@ -157,6 +128,29 @@ export class RoadsComponent implements OnInit {
       this.section.addTo(this.map);
       this.map.fitBounds(this.section.getBounds());
     }
+  }
+
+  surfaceMap(surface) {
+    if(surface === 'asphalt')
+      return 'Asfalt';
+    if(surface === 'concrete')
+      return 'Beton';
+    if(surface === 'paving_stones')
+      return 'Kostka Brukowa';
+    if(surface === 'unpaved')
+      return 'Nieutwardzona';
+    if(surface === 'cobblestone' || surface === 'sett')
+      return 'Bruk'
+    if(surface)
+      return `Inna(${surface})`;
+    return 'Brak informacji';
+  }
+
+  clearFilters() {
+    this.surface = '';
+    this.maxspeed = '';
+    this.lanes = '';
+    this.oneway = false;
   }
 }
 
