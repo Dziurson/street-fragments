@@ -3,6 +3,9 @@
     <div class='col-md-4'>
     </div>
     <div class='col-md-4'>
+      <div *ngIf="wktParseError" class="text-center text-danger">
+        <p>Wprowadzono niepoprawne dane</p>
+      </div>
       <div class="row">
         <div class="col-9">
           <div class="form-group">

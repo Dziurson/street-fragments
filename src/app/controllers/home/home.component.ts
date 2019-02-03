@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RoadService } from 'src/app/services/road.service';
 import { Router } from '@angular/router';
+import * as Terraformer from 'terraformer-wkt-parser';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +14,7 @@ export class HomeComponent implements OnInit {
   searchString: string;
   polygonString: string;
   resultList: any[];
+  wktParseError: boolean = false;
 
   constructor(
     private client: HttpClient,
@@ -30,8 +32,15 @@ export class HomeComponent implements OnInit {
   }
 
   findByBoundary() {
-    this.roadService.setSelectedBoundary({ geotext: this.polygonString, display_name: "Ręcznie wprowadzone dane" });    
-    this.router.navigate(['/roads']);
+    try {
+      Terraformer.parse(this.polygonString);
+      this.wktParseError = false;
+      this.roadService.setSelectedBoundary({ geotext: this.polygonString, display_name: "Ręcznie wprowadzone dane" });    
+      this.router.navigate(['/roads']);
+    }
+    catch {
+      this.wktParseError = true;
+    }  
   }
 
   selectBoundary(boundary: any) {    

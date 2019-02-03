@@ -6,16 +6,6 @@ import * as Leaflet from "leaflet";
 import * as Terraformer from 'terraformer-wkt-parser';
 import * as $ from 'jquery';
 
-$(() => {
-  var content = $('#context');
-  var filter = $('#filter');
-  content.height(window.innerHeight - content.position().top);
-  $(window).resize(() => {
-    content.height(window.innerHeight - content.position().top);
-    content.css('min-height', filter.height() + 'px');
-  })
-})
-
 const streetPattern = "([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]";
 const singleStreetPattern = `^${streetPattern}$`;
 const searchFromToPattern = `^${streetPattern}\\s*\\(\\s*${streetPattern}\\s*-\\s*${streetPattern}\\s*\\)$`;
@@ -63,6 +53,15 @@ export class RoadsComponent implements OnInit {
     private roadService: RoadService) { }
 
   ngOnInit() {
+    $(() => {
+      var content = $('#context');
+      var filter = $('#filter');
+      content.height(window.innerHeight - content.position().top);
+      $(window).resize(() => {
+        content.height(window.innerHeight - content.position().top);
+        content.css('min-height', filter.height() + 'px');
+      })
+    })
     this.boundary = this.roadService.getSelectedBoundary();
 
     if (this.boundary)
