@@ -6,13 +6,13 @@
       </span>
       <span *ngIf="wktBoundary != null">
         Ręcznie wprowadzone dane
-      </span>
-      <div id="map-wrapper" class="mt-2"></div>
+      </span>      
     </h2>
+    <div id="map-wrapper" class="mx-2 mb-2"></div>
     <div class="input-group mb-2">
       <input type="text" class="form-control ml-2" id="searchInput" placeholder="Wyszukaj" [(ngModel)]="searchText">
       <span class="input-group-btn" (click)="searchByText()">
-        <button class="btn btn-primary mx-2" type="button"><i class="fas fa-search"></i> Szukaj</button>
+        <button class="btn btn-primary mx-2" type="button" [disabled]="!searchText || searchText.length < 3"><i class="fas fa-search"></i> Szukaj</button>
       </span>      
     </div>    
   </div>

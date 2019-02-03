@@ -5,6 +5,10 @@ import { Router } from '@angular/router';
 import * as Leaflet from "leaflet";
 import * as Terraformer from 'terraformer-wkt-parser';
 
+const streetPattern = "([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]";
+const singleStreetPattern = `^${streetPattern}$`;
+const searchFromToPattern = `^${streetPattern}\\s*\\(\\s*${streetPattern}\\s*-\\s*${streetPattern}\\s*\\)$`;
+
 @Component({
   selector: 'app-roads',
   templateUrl: './roads.component.html',
@@ -117,16 +121,16 @@ export class RoadsComponent implements OnInit {
       this.selectedSection.removeFrom(this.map);
       this.selectedSection = null;
     }
-    if (this.searchText.match(/^([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]\s*\(\s*([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]\s*-\s*([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]\s*\)\s*$/)) {
-      var streets = this.searchText.match(/([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]/g);
+    if (this.searchText.match(new RegExp(searchFromToPattern))) {
+      var streets = this.searchText.match(new RegExp(streetPattern,'g'));
       this.waiting = true;
       this.roadService.getRoadFromTo({ street: streets[0], street_from: streets[1], street_to: streets[2] }).subscribe((result) => {
         this.handleSerachResult(result);
         this.waiting = false;
       });
     }
-    if (this.searchText.match(/^([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]$/)) {
-      var street = this.searchText.match(/^([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]$/)[0];
+    if (this.searchText.match(new RegExp(singleStreetPattern))) {
+      var street = this.searchText.match(new RegExp(singleStreetPattern))[0];
       this.waiting = true;
       this.roadService.getRoad(street).subscribe((result) => {
         this.handleSerachResult(result)

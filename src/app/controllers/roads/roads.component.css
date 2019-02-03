@@ -16,48 +16,50 @@
 }
 
 .loader {
-    border: 3px solid #f3f3f3; 
-    border-top: 3px solid #3498db; 
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    left: calc(50% + 70px);
-    margin-top: 15px;
-    animation: spin 1s linear infinite;
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
-  #filter
-  {
-    float: left;
-    margin-left: 10px;
-    margin-right: 20px;
-    margin-top: 20px; 
-    width: 150px; 
-    position: fixed;
-  }
-  
-  #context
-  {
-    float: left;
-    margin-left: 200px;
-    width: calc(100% - 200px);
-  }
-
-  .clickable-row:hover {
-    background-color: #007bff;
-    cursor: pointer;
-    color: white;
-  }
-
-  #map-wrapper {
-    height: 300px;
+  border: 3px solid #f3f3f3; 
+  border-top: 3px solid #3498db; 
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: calc(50% + 70px);
+  margin-top: 15px;
+  animation: spin 1s linear infinite;
 }
+  
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#filter
+{
+  float: left;
+  margin-left: 10px;
+  margin-right: 20px;
+  margin-top: 20px; 
+  width: 150px; 
+  position: fixed;
+}
+  
+#context
+{
+  float: left;
+  margin-left: 200px;
+  width: calc(100% - 200px);
+}
+
+.clickable-row:hover {
+  background-color: #007bff;
+  cursor: pointer;
+  color: white;
+}
+
+#map-wrapper {
+  height: 300px;
+}
+
+
 
 
   
