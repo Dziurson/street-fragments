@@ -69,7 +69,7 @@
       </div>
       <div class="row">
         <div class="col-12 col-lg-6 mt-2">
-          <button class="btn btn-primary btn-block" (click)="clearFilters()"><i class="fas fa-eraser"></i> Wyczyść</button>
+          <button class="btn btn-primary btn-block" (click)="clearFilters(true)"><i class="fas fa-eraser"></i> Wyczyść</button>
         </div>
         <div class="col-12 col-lg-6 mt-2">
           <button class="btn btn-primary btn-block" (click)="filterData()"><i class="fas fa-filter"></i> Filtruj</button>
@@ -90,7 +90,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of streetSections; index as i" (click)="showSelectedSection(item)" class="clickable-row">
+            <tr *ngFor="let item of filteredStreetSections; index as i" (click)="showSelectedSection(item)" class="clickable-row">
               <th scope="row">{{ i + 1 }}</th>
               <td>{{ item.name }}</td>
               <td>{{ surfaceMap(item.surface) }}</td>
