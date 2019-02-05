@@ -7,7 +7,7 @@ DECLARE
       from way_nodes as wn2 
       where wn2.way_id = way_id_param) 
     and wn1.way_id != way_id_param 
-    and upper(w.tags->'name') = upper(way_name);
+    and upper(w.tags->'name') like upper(way_name);
 	
   query varchar;
 
@@ -31,7 +31,7 @@ BEGIN
         from way_nodes as wn2 
         where wn2.way_id = way_id_arg) 
       and wn1.way_id != way_id_arg 
-      and upper(w.tags->'name') = upper(source) 
+      and upper(w.tags->'name') like upper(source) 
     LOOP
       IF (previous @> array[_rec]) THEN
         CONTINUE;

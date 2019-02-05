@@ -19,14 +19,13 @@ export class HomeComponent implements OnInit {
   constructor(
     private client: HttpClient,
     private roadService: RoadService,
-    private router: Router
-    ) { }
+    private router: Router) { }
 
   ngOnInit() {
   }
 
-  askForBoundaries() {   
-    this.client.get("https://nominatim.openstreetmap.org/search?q="+ this.searchString +"&format=json&polygon_text=1").subscribe((result: any[]) => {            
+  askForBoundaries() {
+    this.client.get("https://nominatim.openstreetmap.org/search?q=" + this.searchString + "&format=json&polygon_text=1").subscribe((result: any[]) => {
       this.resultList = result.filter(r => r.class == 'boundary');
     })
   }
@@ -35,16 +34,16 @@ export class HomeComponent implements OnInit {
     try {
       Terraformer.parse(this.polygonString);
       this.wktParseError = false;
-      this.roadService.setSelectedBoundary({ geotext: this.polygonString, display_name: "Ręcznie wprowadzone dane" });    
+      this.roadService.setSelectedBoundary({ geotext: this.polygonString, display_name: "Ręcznie wprowadzone dane" });
       this.router.navigate(['/roads']);
     }
     catch {
       this.wktParseError = true;
-    }  
+    }
   }
 
-  selectBoundary(boundary: any) {    
-    this.roadService.setSelectedBoundary(boundary);   
+  selectBoundary(boundary: any) {
+    this.roadService.setSelectedBoundary(boundary);
     this.router.navigate(['/roads']);
   }
 

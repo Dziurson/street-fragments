@@ -71,7 +71,7 @@ server.post('/get-road-from-to', cors(), (req, res, next) => {
       "tags->'maxspeed' as maxspeed, " +
       "tags->'oneway' as oneway, " +      
       "ST_AsGeoJSON(linestring) as object " + 
-      "from ways where id in (select unnest(get_ways('" + req.body.street + "','" + req.body.street_from + "','" + req.body.street_to + "','"+ req.body.wkt +"')))";  
+      "from ways where id in (select unnest(get_ways('%" + req.body.street + "%','%" + req.body.street_from + "%','%" + req.body.street_to + "%','"+ req.body.wkt +"')))";  
 
   sequelize.query(query, { model: Road, mapToModel: true }).then(results => {
       res.json(JSON.stringify(results));

@@ -62,6 +62,7 @@ export class RoadsComponent implements OnInit {
         content.css('min-height', filter.height() + 'px');
       })
     })
+    
     this.boundary = this.roadService.getSelectedBoundary();
 
     if (this.boundary)

@@ -14,9 +14,9 @@ DECLARE
         WHERE  way_id IN (
           SELECT id 
           FROM   ways 
-          WHERE  tags -> 'name' = from_street
+          WHERE  upper(tags -> 'name') like upper(from_street)
 		AND ST_Contains(ST_GeomFromText(selected_area,4326),linestring)))) 
-    AND  tags->'name' = street; 
+    AND  upper(tags->'name') like upper(street); 
 
 BEGIN
 	OPEN first_way_cursor;
