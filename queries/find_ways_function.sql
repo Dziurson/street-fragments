@@ -31,7 +31,7 @@ BEGIN
         from way_nodes as wn2 
         where wn2.way_id = way_id_arg) 
       and wn1.way_id != way_id_arg 
-      and upper(w.tags->'name') like upper(source) 
+      and (upper(w.tags->'name') like upper(source) or w.tags->'junction' is not null) 
     LOOP
       IF (previous @> array[_rec]) THEN
         CONTINUE;
