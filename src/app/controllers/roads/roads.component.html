@@ -94,13 +94,14 @@
               <th scope="row">{{ i + 1 }}</th>              
               <td>{{ displayName(item) }}</td>              
               <td>{{ surfaceMap(item.surface) }}</td>
-              <td>{{ item.lanes }}</td>
+              <td *ngIf="item.lanes">{{ item.lanes }}</td>
+              <td *ngIf="!item.lanes">Brak Informacji</td>
               <td class='align-middle text-center'>
                 <span *ngIf="item.maxspeed">
                   <img class="sign-icon" src="assets/images/B-33_{{item.maxspeed}}.png">
                 </span>
                 <span *ngIf="!item.maxspeed">
-                  -
+                  Brak Informacji
                 </span>
               </td>
               <td class='align-middle text-center'>
