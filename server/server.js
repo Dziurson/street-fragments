@@ -35,6 +35,7 @@ const Road = sequelize.define('project', {
   surface: Sequelize.STRING,
   maxspeed: Sequelize.STRING,
   oneway: Sequelize.STRING,
+  junction: Sequelize.STRING,
   object: Sequelize.JSON
 })
 
@@ -52,7 +53,8 @@ server.post('/get-road', cors(), (req, res, next) => {
       "tags->'lanes' as lanes, " +
       "tags->'surface' as surface, " +
       "tags->'maxspeed' as maxspeed, " +
-      "tags->'oneway' as oneway, " +      
+      "tags->'oneway' as oneway, " +     
+      "tags->'junction' as junction, " + 
       "ST_AsGeoJSON(linestring) as object " + 
       "from ways where ST_Contains(ST_GeomFromText('" + req.body.wkt + "',4326),linestring) " + 
       "and upper(tags->'name') like (upper('%" + req.body.street + "%'))";
@@ -69,7 +71,8 @@ server.post('/get-road-from-to', cors(), (req, res, next) => {
       "tags->'lanes' as lanes, " +
       "tags->'surface' as surface, " +
       "tags->'maxspeed' as maxspeed, " +
-      "tags->'oneway' as oneway, " +      
+      "tags->'oneway' as oneway, " +    
+      "tags->'junction' as junction, " +   
       "ST_AsGeoJSON(linestring) as object " + 
       "from ways where id in (select unnest(get_ways('%" + req.body.street + "%','%" + req.body.street_from + "%','%" + req.body.street_to + "%','"+ req.body.wkt +"')))";  
 

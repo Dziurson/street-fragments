@@ -4,5 +4,6 @@ export class Road {
     surface: string
     maxspeed: string
     oneway: string
+    junction: string
     object: string
   }

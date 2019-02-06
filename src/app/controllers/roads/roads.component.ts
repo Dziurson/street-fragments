@@ -6,7 +6,7 @@ import * as Leaflet from "leaflet";
 import * as Terraformer from 'terraformer-wkt-parser';
 import * as $ from 'jquery';
 
-const streetPattern = "([a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\\s?)*[a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]";
+const streetPattern = "([1-9a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\\s?)*[1-9a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]";
 const singleStreetPattern = `^${streetPattern}$`;
 const searchFromToPattern = `^${streetPattern}\\s*\\(\\s*${streetPattern}\\s*-\\s*${streetPattern}\\s*\\)$`;
 
@@ -158,6 +158,18 @@ export class RoadsComponent implements OnInit {
     return 'Brak informacji';
   }
 
+  junctionMap(junction) {
+    if(junction === 'roundabout')
+      return 'Rondo'
+    if(junction === 'circural')
+      return 'Skrzyżowanie o ruchu okrężnym'
+    if(junction === 'jughandle')
+      return 'Węzeł'
+    if(junction === 'filter')
+      return 'Skrzyżowanie równoległe'
+    return junction;
+  }
+
   filterData() {
     if (this.streetSections) {
       this.filteredStreetSections = this.streetSections.filter(road => {
@@ -192,6 +204,14 @@ export class RoadsComponent implements OnInit {
       this.clearMapFromSelection();
       this.showResultOnMap();
     }
+  }
+
+  displayName(road: Road) {
+    if(road.name)
+      return road.name;
+    if(road.junction)
+      return this.junctionMap(road.junction);
+    return '-';
   }
 }
 
