@@ -28,7 +28,7 @@
         psql -U postgres -d roads -f pgsnapshot_schema_0.6_bbox.sql
         psql -U postgres -d roads -f pgsnapshot_schema_0.6_linestring.sql
         
-5. Przy pomocy narzędzia Osmosis zaimportować dane do bazy (Dane można przygotować we własnym zakresie, korzystając z zasobów OSM i ogólnodostępnych narzędzi)
+5. Przy pomocy narzędzia Osmosis zaimportować dane do bazy (Dane można przygotować we własnym zakresie, korzystając z zasobów OSM i ogólnodostępnych narzędzi). Plik roads.osm jest plikiem pbf przekonwertowanym do formatu osm przy użyciu narzędzia osmconvert
 
     osmosis --read-xml roads.osm --log-progress --write-pgsql database=roads user=postgres password=postgres
     
