@@ -8,7 +8,7 @@ import * as $ from 'jquery';
 
 const streetPattern = "([1-9a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]+\\s?)*[1-9a-zA-ZąĄćĆęĘłŁńŃóÓśŚżŻźŹ]";
 const singleStreetPattern = `^${streetPattern}$`;
-const searchFromToPattern = `^${streetPattern}\\s*\\(\\s*${streetPattern}\\s*-\\s*${streetPattern}\\s*\\)$`;
+const searchFromToPattern = `^${streetPattern}\\s*\\(\\s*${streetPattern}\\s*(-|-\\s*kier\\.)\\s*${streetPattern}\\s*\\)$`;
 
 @Component({
   selector: 'app-roads',
@@ -97,7 +97,7 @@ export class RoadsComponent implements OnInit {
   searchByText() {
     this.clearMapFromSelection();
     if (this.searchText.match(new RegExp(searchFromToPattern))) {
-      var streets = this.searchText.match(new RegExp(streetPattern, 'g'));
+      var streets = this.searchText.replace(/-\s*kier\./,'-').match(new RegExp(streetPattern, 'g'));
       this.waiting = true;
       this.roadService.getRoadFromTo({ street: streets[0], street_from: streets[1], street_to: streets[2] }).subscribe((result) => {
         this.handleSerachResult(result);

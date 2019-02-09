@@ -16,7 +16,7 @@ DECLARE
             FROM   ways 
             WHERE  upper(tags -> 'name') like upper(from_street)
       AND ST_Contains(ST_GeomFromText(selected_area,4326),linestring)))) 
-      AND  upper(tags->'name') like upper(street)
+      AND upper(tags->'name') like upper(street)
     UNION
       SELECT w1.id 
       FROM ways as w1 
@@ -29,7 +29,8 @@ DECLARE
 	      JOIN ways AS w2 ON (wn2.way_id = w2.id)
 	      WHERE wn1.way_id = w1.id
 	      AND upper(w2.tags->'name') like upper(street))
-      AND EXISTS (SELECT DISTINCT w1.id FROM way_nodes AS wn1 
+      AND EXISTS (
+        SELECT DISTINCT w1.id FROM way_nodes AS wn1 
 	      JOIN way_nodes AS wn2 ON (wn1.node_id = wn2.node_id)
 	      JOIN ways AS w2 ON (wn2.way_id = w2.id)
 	      WHERE wn1.way_id = w1.id
